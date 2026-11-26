@@ -1,0 +1,168 @@
+\documentclass[10pt]{article}
+\usepackage[margin=0.9in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,booktabs}
+\usepackage[hidelinks]{hyperref}
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}{Theorem}
+\title{Unbounded speed replacements for seventeen lonely runners}
+\author{Claude Make No Mistakes}
+\date{26 November 2026}
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Replace up to six of the speeds \(1,\ldots,16\) by distinct
+integers greater than 16. We show by exact interval computation
+that every nontrivial replacement set has loneliness strictly
+greater than \(1/17\). The inserted speeds have no imposed upper
+bound. A density bound on each surviving time interval determines
+a finite range for the smallest remaining inserted speed.
+\end{abstract}
+
+\section{An interval bound}
+Let \(S\) be a nonempty finite set of positive integer speeds and put
+\[
+ F_S(t)=\min_{v\in S}\|vt\|,\qquad
+ U(S)=\{t\in[0,1/2]:F_S(t)\geq 1/17\}.
+\]
+Here \(\|x\|\) denotes distance to the nearest integer.
+Periodicity and reflection allow us to restrict to \([0,1/2]\).
+The region \(U(S)\) is a finite union of closed intervals with
+rational endpoints, possibly singletons. If it has positive
+length, then some time satisfies \(F_S(t)>1/17\), since equality
+for any one speed occurs at finitely many times.
+
+Zhang bounds the measure that an inserted runner can cover in an
+uncovered interval in the study of two-entry modifications
+\cite[\S6.1]{zhang}. We use the sharp single-interval discrepancy
+and apply it recursively, updating the interval after every choice.
+
+\begin{lemma}
+Suppose \(I\subseteq U(S)\) is an interval of length \(L>0\).
+Let \(1\leq r\leq8\), and let \(w_1<\cdots<w_r\) be positive
+integer speeds such that \(\max_t F_{S\cup\{w_1,\ldots,w_r\}}(t)
+\leq1/17\). If \(r\geq2\), then
+\[
+ w_1\ \leq\ \frac{30r}{17(17-2r)L}.
+\]
+If \(r=1\), then \(w_1\leq2/(17L)\).
+\end{lemma}
+
+\begin{proof}
+Set \(\alpha=2/17\). For a single speed \(w\), the closed set of
+times with \(\|wt\|\leq1/17\) occupies an \(\alpha\)-fraction
+of each period of length \(1/w\). Write \(wL=m+\theta\), with
+\(m\) integral and \(0\leq\theta<1\). In the \(wt\) coordinate,
+the \(m\) full periods contribute \(m\alpha\). The remaining
+interval projects injectively to the period circle except at
+endpoints, so its contribution is at most \(\min(\theta,\alpha)\).
+Since \(\min(\theta,\alpha)-\alpha\theta\leq\alpha(1-\alpha)\),
+the bad portion of \(I\) has length at most
+\(\alpha L+\alpha(1-\alpha)/w\).
+
+At every time in \(I\) other than the finitely many retained-speed
+equality times, at least one of the new speeds must be bad.
+The union bound gives
+\[
+ L\ \leq\ r\alpha L+\alpha(1-\alpha)\sum_{i=1}^r\frac1{w_i}
+ \ \leq\ r\alpha L+\frac{r\alpha(1-\alpha)}{w_1}.
+\]
+Solving yields the claimed bound. If \(r=1\), the closed bad
+set covers a dense subset of \(I\), hence all of \(I\).
+Connectedness forces \(I\) into one bad interval, of length
+\(2/(17w_1)\).
+\end{proof}
+
+\section{Complete search with no prescribed speed cap}
+\begin{theorem}
+Let \(V\) be a set of 16 distinct positive integers. If at most
+six elements of \(V\) exceed 16, then
+\(\max_t F_V(t)\geq1/17\), with equality precisely for
+\(V=\{1,\ldots,16\}\).
+\end{theorem}
+
+\begin{proof}
+For the baseline, the seventeen points \(0,t,\ldots,16t\)
+on the unit circle have a gap of length at most \(1/17\).
+Subtracting its endpoints gives a speed at distance at most
+\(1/17\) from the stationary runner. At \(t=1/17\), equality
+holds.
+
+For each \(r\in\{1,\ldots,6\}\), choose the \(r\) removed speeds
+from \(\{1,\ldots,16\}\) and start from the retained speeds.
+We search for all completions with loneliness at most \(1/17\).
+If there are \(k\) inserted speeds still to choose, use a
+longest interval in the current \(U(S)\) and the lemma to bound
+the least remaining speed. Branch over that finite range,
+respecting the increasing order and the lower bound 17.
+Intersect \(U(S)\) with the chosen speed's good intervals,
+whose endpoints at time \(t\) are
+\[
+ \frac{17j+1}{17v}\qquad\text{and}\qquad
+ \frac{17j+16}{17v}\qquad(j\in\mathbb Z).
+\]
+At the last choice we first require every positive interval
+to fit in a single closed bad arc of that speed. A full tuple
+with empty \(U\) is a counterexample. A nonempty, finite \(U\)
+gives a tight instance.
+
+At any proper prefix with no positive interval, only finitely
+many rational times remain. An additional speed divisible by
+all of their denominators rules out all those times, giving
+a strict counterexample after padding with distinct larger
+speeds. This check is included before the interval bound is
+applied. The completed search encountered no such prefix.
+All retained sets were examined and no full completion
+with loneliness at most \(1/17\) remained.
+\end{proof}
+
+\section{Certificates and scope}
+The archives include one record per retained set and store the
+explored counts and maximum computed cutoffs at each depth.
+There are 14,892 choices across one to six replacements.
+Both search implementations keep interval endpoints exact.
+The native implementation stops on any bound exceeding its
+arithmetic range. No such bound was reached in the recorded
+search. The separate verifier enumerates the expected retained
+sets and recomputes selected rows using rational arithmetic
+and a direct last-speed intersection. It also checks the
+tight baseline and a strict-cover control.
+
+\begin{center}
+\begin{tabular}{rrrr}
+\toprule
+Replacements & Retained sets & Speed trials & Largest cutoff \\
+\midrule
+1 & 16 & 72 & 32 \\
+2 & 120 & 1,899 & 64 \\
+3 & 560 & 44,575 & 98 \\
+4 & 1,820 & 826,808 & 141 \\
+5 & 4,368 & 14,879,151 & 175 \\
+6 & 8,008 & 346,744,936 & 306 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Goddyn and Wong study simultaneous multiplicative speedups
+\cite{goddyn}. Zhang classifies arbitrary one-entry replacements
+and reports a bounded two-entry census \cite{zhang}. The
+present range keeps the runner count fixed and allows up to
+six arbitrary replacements above 16. Any counterexample to
+the unrestricted seventeen-runner conjecture would therefore
+require at least seven speeds above 16 in a primitive integer
+speed set. The reduction to positive integer speeds is standard
+\cite{tao}, and division by their common divisor preserves
+the maximum loneliness.
+
+\begin{thebibliography}{9}
+\bibitem{goddyn} L. Goddyn and E. B. Wong.
+Tight instances of the lonely runner.
+\emph{Integers} 6 (2006), A38.
+\bibitem{tao} T. Tao. Some remarks on the lonely runner conjecture.
+\emph{Contributions to Discrete Mathematics} 13 (2018), 1--31.
+\href{https://arxiv.org/abs/1701.02048}{arXiv:1701.02048}.
+\bibitem{zhang} Y. Zhang. Tight instances of the Lonely Runner
+Conjecture: one-entry modifications and the growth of speeds.
+\href{https://arxiv.org/html/2608.13599v3}{arXiv:2608.13599v3}, 2026.
+\end{thebibliography}
+\end{document}
